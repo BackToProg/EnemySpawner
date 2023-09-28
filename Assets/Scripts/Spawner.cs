@@ -1,46 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.SceneTemplate;
 using UnityEngine;
-using Random = System.Random;
+using UnityEngine.UIElements;
 
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private float _seconds;
     [SerializeField] private Enemy _template;
-   
-    private GameObject[] _spawnPoints;
+
+    private List<Transform> _spawnPointsTransform;
     private readonly bool _isActive = true;
 
     private void Start()
     {
-        _spawnPoints = GameObject.FindGameObjectsWithTag("Respawn");
+        
+        SpawnPoints[] spawnPoints = FindObjectsOfType<SpawnPoints>();
+        _spawnPointsTransform = new List<Transform>();
+        
+        _spawnPointsTransform.Add(spawnPoints[0].transform);
+
+        foreach (SpawnPoints spawnPoint in spawnPoints)
+        {
+            _spawnPointsTransform.Add(spawnPoint.transform);
+        }
+
         var spawnOnRandomPointRun = StartCoroutine(SpawnOnRandomPoint());
     }
 
     private IEnumerator SpawnOnRandomPoint()
     {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(_seconds);
+
         while (_isActive)
         {
-            int spawnIndex = GetRandomSpawnPointIndex();
+            Transform spawnPoint = _spawnPointsTransform[GetRandomSpawnPointIndex()];
 
-            GameObject spawnPoint = _spawnPoints[spawnIndex];
-            Vector3 spawnPointPosition = spawnPoint.transform.position;
-         
-            Instantiate(_template, new Vector3(spawnPointPosition.x, 0, 
-                spawnPointPosition.z), spawnPoint.transform.rotation);
-      
-            yield return new WaitForSeconds(_seconds);
+            Instantiate(_template, new Vector3(spawnPoint.position.x, 0,
+                spawnPoint.position.z), spawnPoint.rotation);
+
+            yield return waitForSeconds;
         }
     }
 
     private int GetRandomSpawnPointIndex()
     {
         int minSpawnPointIndex = 0;
-        int maxSpawnPointIndex = _spawnPoints.Length;
-        Random random = new Random();
-      
-        return random.Next(minSpawnPointIndex, maxSpawnPointIndex);
-    }
+        int maxSpawnPointIndex = _spawnPointsTransform.Count;
 
+        return Random.Range(minSpawnPointIndex, maxSpawnPointIndex);
+    }
 }
