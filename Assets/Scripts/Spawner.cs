@@ -10,17 +10,13 @@ public class Spawner : MonoBehaviour
     [SerializeField] private float _seconds;
     [SerializeField] private Enemy _template;
 
-    private List<Transform> _spawnPointsTransform;
+    private readonly List<Transform> _spawnPointsTransform = new List<Transform>();
     private readonly bool _isActive = true;
 
     private void Start()
     {
-        
         SpawnPoints[] spawnPoints = FindObjectsOfType<SpawnPoints>();
-        _spawnPointsTransform = new List<Transform>();
         
-        _spawnPointsTransform.Add(spawnPoints[0].transform);
-
         foreach (SpawnPoints spawnPoint in spawnPoints)
         {
             _spawnPointsTransform.Add(spawnPoint.transform);
