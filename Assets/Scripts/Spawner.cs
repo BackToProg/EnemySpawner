@@ -1,25 +1,23 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEditor.SceneTemplate;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private float _seconds;
     [SerializeField] private Enemy _template;
 
-    private readonly List<Transform> _spawnPointsTransform = new List<Transform>();
+    private Transform[] _spawnPointsTransform;
     private readonly bool _isActive = true;
 
     private void Start()
     {
-        SpawnPoints[] spawnPoints = FindObjectsOfType<SpawnPoints>();
+        SpawnPoints spawnPoints = FindObjectOfType<SpawnPoints>();
         
-        foreach (SpawnPoints spawnPoint in spawnPoints)
+        _spawnPointsTransform = new Transform[spawnPoints.transform.childCount];
+
+        for (int i = 0; i < _spawnPointsTransform.Length; i++)
         {
-            _spawnPointsTransform.Add(spawnPoint.transform);
+            _spawnPointsTransform[i] = spawnPoints.transform.GetChild(i).GetComponent<Transform>();
         }
 
         var spawnOnRandomPointRun = StartCoroutine(SpawnOnRandomPoint());
@@ -43,7 +41,7 @@ public class Spawner : MonoBehaviour
     private int GetRandomSpawnPointIndex()
     {
         int minSpawnPointIndex = 0;
-        int maxSpawnPointIndex = _spawnPointsTransform.Count;
+        int maxSpawnPointIndex = _spawnPointsTransform.Length;
 
         return Random.Range(minSpawnPointIndex, maxSpawnPointIndex);
     }
