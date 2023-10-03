@@ -46,14 +46,19 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets/Scripts/Enemy.cs" />
+     <Compile Include="Assets/Scripts/WaypointMovement.cs" />
      <Compile Include="Assets/Scripts/Spawner.cs" />
+     <Compile Include="Assets/Scripts/Target.cs" />
      <Compile Include="Assets/Scripts/SpawnPoints.cs" />
+     <Compile Include="Assets/Scripts/SpawnPoint.cs" />
      <Folder Include="Assets" />
      <Folder Include="Assets/Scenes" />
      <Folder Include="Assets/Animation" />
      <Folder Include="Assets/Scripts" />
+     <Folder Include="Assets/Animation/Materials" />
      <Folder Include="Assets/Prefabs" />
      <Folder Include="Assets/Materials" />
+     <Folder Include="Assets/Animation/Textures" />
      <Reference Include="UnityEngine">
      <HintPath>/Applications/Unity/Hub/Editor/2022.3.9f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.dll</HintPath>
      </Reference>

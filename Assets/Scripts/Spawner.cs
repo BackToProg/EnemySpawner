@@ -4,20 +4,19 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private float _seconds;
-    [SerializeField] private Enemy _template;
 
-    private Transform[] _spawnPointsTransform;
+    private GameObject[] _spawnPoints;
     private readonly bool _isActive = true;
 
     private void Start()
     {
-        SpawnPoints spawnPoints = FindObjectOfType<SpawnPoints>();
-        
-        _spawnPointsTransform = new Transform[spawnPoints.transform.childCount];
+        SpawnPoints parentSpawnPoint = FindObjectOfType<SpawnPoints>();
 
-        for (int i = 0; i < _spawnPointsTransform.Length; i++)
+        _spawnPoints = new GameObject[parentSpawnPoint.transform.childCount];
+
+        for (int i = 0; i < _spawnPoints.Length; i++)
         {
-            _spawnPointsTransform[i] = spawnPoints.transform.GetChild(i).GetComponent<Transform>();
+            _spawnPoints[i] = parentSpawnPoint.transform.GetChild(i).gameObject;
         }
 
         var spawnOnRandomPointRun = StartCoroutine(SpawnOnRandomPoint());
@@ -29,9 +28,11 @@ public class Spawner : MonoBehaviour
 
         while (_isActive)
         {
-            Transform spawnPoint = _spawnPointsTransform[GetRandomSpawnPointIndex()];
-
-            Instantiate(_template, new Vector3(spawnPoint.position.x, 0,
+            GameObject randomSpawnPoint = _spawnPoints[GetRandomSpawnPointIndex()];
+            GameObject spawnPointEnemyType = randomSpawnPoint.GetComponent<SpawnPoint>().GetEnemyTemplate();
+            Transform spawnPoint = randomSpawnPoint.transform;
+            
+            GameObject newEnemy = Instantiate(spawnPointEnemyType, new Vector3(spawnPoint.position.x, 0,
                 spawnPoint.position.z), spawnPoint.rotation);
 
             yield return waitForSeconds;
@@ -41,8 +42,9 @@ public class Spawner : MonoBehaviour
     private int GetRandomSpawnPointIndex()
     {
         int minSpawnPointIndex = 0;
-        int maxSpawnPointIndex = _spawnPointsTransform.Length;
+        int maxSpawnPointIndex = _spawnPoints.Length;
 
         return Random.Range(minSpawnPointIndex, maxSpawnPointIndex);
     }
+    
 }

@@ -355,7 +355,10 @@
 -analyzer:"/Applications/Unity/Hub/Editor/2022.3.9f1/Unity.app/Contents/Tools/Unity.SourceGenerators/Unity.SourceGenerators.dll"
 "Assets/Scripts/Enemy.cs"
 "Assets/Scripts/Spawner.cs"
+"Assets/Scripts/SpawnPoint.cs"
 "Assets/Scripts/SpawnPoints.cs"
+"Assets/Scripts/Target.cs"
+"Assets/Scripts/WaypointMovement.cs"
 -langversion:9.0
 
 /deterministic
