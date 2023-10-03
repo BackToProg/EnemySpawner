@@ -9,8 +9,18 @@ public class SpawnPoint : MonoBehaviour
     [SerializeField] private Target _target;
 
     public GameObject GetEnemyTemplate() => _enemyTemplate;
+    
+    private void Start()
+    {
+        LookAtTarget();
+    }
 
     private void Update()
+    {
+        LookAtTarget();
+    }
+
+    private void LookAtTarget()
     {
         transform.LookAt(_target.transform);
     }
