@@ -4,21 +4,12 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private float _seconds;
-
-    private GameObject[] _spawnPoints;
+    [SerializeField] private SpawnPoint[] _spawnPoints;
+    
     private readonly bool _isActive = true;
 
     private void Start()
     {
-        SpawnPoints parentSpawnPoint = FindObjectOfType<SpawnPoints>();
-
-        _spawnPoints = new GameObject[parentSpawnPoint.transform.childCount];
-
-        for (int i = 0; i < _spawnPoints.Length; i++)
-        {
-            _spawnPoints[i] = parentSpawnPoint.transform.GetChild(i).gameObject;
-        }
-
         var spawnOnRandomPointRun = StartCoroutine(SpawnOnRandomPoint());
     }
 
@@ -28,12 +19,14 @@ public class Spawner : MonoBehaviour
 
         while (_isActive)
         {
-            GameObject randomSpawnPoint = _spawnPoints[GetRandomSpawnPointIndex()];
-            GameObject spawnPointEnemyType = randomSpawnPoint.GetComponent<SpawnPoint>().GetEnemyTemplate();
+            SpawnPoint randomSpawnPoint = _spawnPoints[GetRandomSpawnPointIndex()];
+            Enemy spawnPointEnemyType = randomSpawnPoint.GetEnemyTemplate();
             Transform spawnPoint = randomSpawnPoint.transform;
             
-            GameObject newEnemy = Instantiate(spawnPointEnemyType, new Vector3(spawnPoint.position.x, 0,
+            Enemy newEnemy = Instantiate(spawnPointEnemyType, new Vector3(spawnPoint.position.x, 1,
                 spawnPoint.position.z), spawnPoint.rotation);
+
+            newEnemy.Target = randomSpawnPoint.GetTarget().transform;
 
             yield return waitForSeconds;
         }
@@ -42,9 +35,8 @@ public class Spawner : MonoBehaviour
     private int GetRandomSpawnPointIndex()
     {
         int minSpawnPointIndex = 0;
-        int maxSpawnPointIndex = _spawnPoints.Length;
 
-        return Random.Range(minSpawnPointIndex, maxSpawnPointIndex);
+        return Random.Range(minSpawnPointIndex, _spawnPoints.Length);
     }
     
 }
